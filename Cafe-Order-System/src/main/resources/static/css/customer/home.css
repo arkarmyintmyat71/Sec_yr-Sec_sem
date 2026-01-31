@@ -1,0 +1,158 @@
+/* ================= RESET ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+/* ================= BODY ================= */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #ffffff;
+    color: #333;
+}
+
+/* ================= NAVBAR ================= */
+.cafe-navbar {
+    background: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 30px;
+}
+
+.cafe-navbar .navbar-brand {
+    font-weight: bold;
+    font-size: 20px;
+    color: #333;
+}
+
+.cafe-navbar .nav-link {
+    color: #333;
+    font-weight: 500;
+    margin-left: 12px;
+}
+
+.cafe-navbar .nav-link:hover,
+.cafe-navbar .nav-link.active {
+    color: #8b4513;
+}
+
+/* ================= MAIN ================= */
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+/* ================= FOOTER ================= */
+.cafe-footer {
+    background: #3a3a3a;
+    color: #ddd;
+    font-size: 14px;
+    margin-top: auto;
+}
+
+/* Footer Grid */
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 40px 60px;
+}
+
+/* Footer Columns */
+.footer-column {
+    min-width: 0;
+}
+
+/* Footer Titles */
+.cafe-footer h5 {
+    color: #ffffff;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+/* Footer Text */
+.cafe-footer p {
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+/* Footer Icons */
+.cafe-footer i {
+    color: #c7a17a;
+    margin-right: 8px;
+}
+
+/* ================= FOOTER BOTTOM ================= */
+.footer-bottom {
+    background: #2a2a2a;
+    text-align: center;
+    padding: 12px;
+    font-size: 13px;
+    color: #aaa;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* Tablets */
+@media (max-width: 992px) {
+    .footer-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 30px;
+    }
+}
+
+/* Phones */
+@media (max-width: 576px) {
+
+    /* Navbar */
+    .cafe-navbar {
+        padding: 10px 15px;
+    }
+
+    .cafe-navbar .navbar-brand {
+        font-size: 16px;
+    }
+
+    .cafe-navbar .nav-link {
+        margin: 6px 0;
+        text-align: center;
+    }
+
+    /* Footer stays 3 columns */
+    .footer-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 20px 10px;
+        text-align: center;
+    }
+
+    /* Smaller footer text */
+    .cafe-footer h5 {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .cafe-footer p,
+    .cafe-footer small {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    .cafe-footer i {
+        font-size: 12px;
+        margin-right: 4px;
+    }
+
+    .footer-bottom {
+        font-size: 11px;
+        padding: 8px;
+    }
+}

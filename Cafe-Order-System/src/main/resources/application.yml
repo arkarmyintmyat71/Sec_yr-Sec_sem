@@ -1,0 +1,21 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: Cafe-Order-System
+  jpa:
+    properties:
+      hibernate:
+        default_schema: cafe_order_system
+      database: mysql
+    hibernate:
+      dialect: ${spring.jpa.properties.hibernate.dialect}
+      ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate.jdbc.lob.non_contextual_creation: true
+        hibernate.format_sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/cosdb?useUnicode=yes&characterEncoding=UTF-8
+    username: root
+    password: Ark@r122181

@@ -1,0 +1,144 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Prevent page scroll */
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: #f3f4f6;
+}
+
+/* Main container */
+.auth-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ================= LEFT PANEL ================= */
+.auth-left {
+    width: 50%;
+    background: #7E5C4A;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.auth-logo {
+    font-size: 64px;
+    margin-bottom: 15px;
+}
+
+.auth-left h2 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.auth-left p {
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+/* ================= RIGHT PANEL ================= */
+.auth-right {
+    width: 50%;
+    height: 100vh;
+    overflow-y: auto;              /* Scroll only right side */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;       /* Important for long form */
+    padding: 40px 0;
+    background: #F2D7B6;
+}
+
+/* ================= FORM BOX ================= */
+.auth-box {
+    width: 100%;
+    max-width: 900px;              /* FIX for 3 columns */
+    padding: 0 24px;
+}
+
+/* ================= FORM ELEMENTS ================= */
+label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.form-control,
+.form-select {
+    height: 44px;
+    font-size: 14px;
+}
+
+textarea.form-control {
+    height: auto;
+}
+
+/* Section title sticky (Register) */
+#registerForm h4 {
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    padding: 12px 0;
+    z-index: 10;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Buttons */
+.btn {
+    height: 44px;
+    font-weight: 500;
+}
+
+/* ================= SCROLLBAR ================= */
+.auth-right::-webkit-scrollbar {
+    width: 6px;
+}
+
+.auth-right::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 8px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 992px) {
+    .auth-box {
+        max-width: 720px;          /* 2 columns */
+    }
+}
+
+@media (max-width: 768px) {
+
+    body {
+        overflow-y: auto;
+    }
+
+    .auth-container {
+        flex-direction: column;
+    }
+
+    .auth-left {
+        display: none;
+    }
+
+    .auth-right {
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        padding: 20px;
+    }
+
+    .auth-box {
+        max-width: 100%;
+        padding: 0;
+    }
+}
