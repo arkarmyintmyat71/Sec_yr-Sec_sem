@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Cafe Order System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/auth.css}">
@@ -14,100 +15,85 @@
 
 <body>
 
-<div class="auth-container">
+<div class="auth-wrapper">
 
-    <!-- LEFT PANEL -->
-    <div class="auth-left">
-        <i id="leftIcon" class="bi bi-cup-hot-fill auth-logo"></i>
-        <h2 id="leftTitle">Cafe Order System</h2>
-        <p id="leftText">Staff login to manage orders and billing.</p>
-
-        <button class="btn btn-light btn-sm mt-3" onclick="toggleForm()">
-            <i id="leftBtnIcon" class="bi bi-person-plus"></i>
-            <span id="leftBtnText"> Register</span>
-        </button>
+    <!-- BRAND -->
+    <div class="auth-brand">
+        <i class="bi bi-cup-hot-fill brand-icon"></i>
+        <h2>Cafe Order System</h2>
+        <p>Manage orders & billing easily</p>
     </div>
 
-    <!-- RIGHT PANEL -->
-    <div class="auth-right">
-        <div class="auth-box">
+    <!-- FORM SIDE -->
+    <div class="auth-card">
 
-            <!-- LOGIN FORM -->
-            <div id="loginForm">
-                <h4 class="mb-4">
-                    <i class="bi bi-box-arrow-in-right"></i> Login
-                </h4>
+        <!-- LOGIN -->
+        <div id="loginForm">
+            <!-- Sticky Title -->
+            <div class="form-header">
+                <h4>LogIn</h4>
+            </div>
+            <form th:action="@{/login}" method="post">
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" class="form-control" required>
+                </div>
 
-                <form th:action="@{/login}" method="post">
-                    <div class="mb-3">
-                        <label>Email</label>
-                        <input type="email" class="form-control" required>
-                    </div>
+                <div class="mb-3">
+                    <label>Password</label>
+                    <input type="password" class="form-control" required>
+                </div>
 
-                    <div class="mb-3">
-                        <label>Password</label>
-                        <input type="password" class="form-control" required>
-                    </div>
+                <button class="btn btn-dark w-100">Login</button>
+            </form>
 
-                    <button class="btn btn-dark w-100">
-                        Login
-                    </button>
-                </form>
+            <p class="switch-text">
+                Don’t have an account?
+                <span onclick="toggleForm()">Register</span>
+            </p>
+        </div>
+
+        <!-- REGISTER -->
+        <div id="registerForm" style="display:none;">
+
+            <!-- Sticky Title -->
+            <div class="form-header">
+                <h4>Staff Registration</h4>
             </div>
 
-            <!-- REGISTER FORM -->
-            <div id="registerForm" style="display:none;">
-                <h4 class="mb-4">
-                    <i class="bi bi-person-plus"></i> Staff Registration
-                </h4>
-
+            <!-- Scrollable Form Body -->
+            <div class="form-body">
                 <form th:action="@{/register}" method="post">
 
                     <div class="row g-3">
 
-                        <!-- Column 1 -->
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-12">
                             <label>Name</label>
-                            <input type="text" name="name" class="form-control" required>
+                            <input type="text" class="form-control" required>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-12">
                             <label>Date of Birth</label>
-                            <input type="date" name="dob" class="form-control" onchange="calculateAge(this.value)" required>
+                            <input type="date" class="form-control"
+                                   onchange="calculateAge(this.value)" required>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-12">
                             <label>Age</label>
-                            <input type="number" name="age" id="age" class="form-control" readonly>
+                            <input type="number" id="age" class="form-control" readonly>
                         </div>
 
-                        <!-- Column 2 -->
-                        <div class="col-md-4">
-                            <label class="d-block">Gender</label>
-
-                            <div class="d-flex gap-3 mt-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio"
-                                           name="gender" id="genderMale" value="Male" required>
-                                    <label class="form-check-label" for="genderMale">
-                                        Male
-                                    </label>
-                                </div>
-
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio"
-                                           name="gender" id="genderFemale" value="Female">
-                                    <label class="form-check-label" for="genderFemale">
-                                        Female
-                                    </label>
-                                </div>
+                        <div class="col-md-4 col-12">
+                            <label>Gender</label>
+                            <div class="gender-group">
+                                <label><input type="radio" name="gender"> Male</label>
+                                <label><input type="radio" name="gender"> Female</label>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-12">
                             <label>Role</label>
-                            <select name="role" class="form-select" required>
-                                <option value="">Select Role</option>
+                            <select class="form-select">
                                 <option>ADMIN</option>
                                 <option>CASHIER</option>
                                 <option>WAITER</option>
@@ -115,55 +101,48 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-12">
                             <label>Experience (Years)</label>
-                            <input type="number" name="experience" class="form-control" min="0">
+                            <input type="number" class="form-control">
                         </div>
 
-                        <!-- Column 3 -->
-                        <div class="col-md-4">
+                        <div class="col-md-6 col-12">
                             <label>Email</label>
-                            <input type="email" name="email" class="form-control" required>
+                            <input type="email" class="form-control">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6 col-12">
                             <label>Phone</label>
-                            <input type="tel" name="phone" class="form-control" required>
+                            <input type="tel" class="form-control">
                         </div>
 
-                        <div class="col-md-4">
-                            <label>Hire Date</label>
-                            <input type="date" name="hireDate" class="form-control" required>
-                        </div>
-
-                        <!-- Full Width -->
                         <div class="col-12">
                             <label>Address</label>
-                            <textarea name="address" class="form-control" rows="2" required></textarea>
+                            <textarea class="form-control"></textarea>
                         </div>
 
                         <div class="col-12">
                             <label>Password</label>
-                            <input type="password" name="password" class="form-control" required>
+                            <input type="password" class="form-control">
                         </div>
 
-                        <div class="col-12 mt-3">
-                            <button class="btn btn-dark w-100">
-                                Register
-                            </button>
+                        <div class="col-12">
+                            <button class="btn btn-dark w-100">Register</button>
                         </div>
-
                     </div>
+
                 </form>
+
+                <p class="switch-text">
+                    Already have an account?
+                    <span onclick="toggleForm()">Login</span>
+                </p>
             </div>
-
         </div>
-    </div>
 
+    </div>
 </div>
 
-<!-- JS -->
 <script th:src="@{/js/auth.js}"></script>
-
 </body>
 </html>

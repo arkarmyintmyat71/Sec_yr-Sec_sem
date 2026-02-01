@@ -1,28 +1,46 @@
-/* Reset */
+/* RESET */
 * {
     box-sizing: border-box;
-    font-family: "Segoe UI", sans-serif;
     margin: 0;
     padding: 0;
+    font-family: "Segoe UI", sans-serif;
 }
 
-/* Prevent page scroll */
+/* BODY */
 body {
     height: 100vh;
     overflow: hidden;
-    background: #f3f4f6;
+    background: #1e293b;
 }
 
-/* Main container */
-.auth-container {
+/* Sticky register header */
+.form-header {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Scroll only form content */
+.form-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* MAIN WRAPPER */
+.auth-wrapper {
     display: flex;
     height: 100vh;
 }
 
-/* ================= LEFT PANEL ================= */
-.auth-left {
+/* BRAND */
+.auth-brand {
     width: 50%;
-    background: #7E5C4A;
+    background: #1e293b;
     color: white;
     display: flex;
     flex-direction: column;
@@ -32,113 +50,94 @@ body {
     padding: 40px;
 }
 
-.auth-logo {
-    font-size: 64px;
-    margin-bottom: 15px;
+.brand-icon {
+    font-size: 72px;
+    margin-bottom: 20px;
 }
 
-.auth-left h2 {
-    font-weight: 600;
-    margin-bottom: 10px;
+.auth-brand h2 {
+    font-size: 32px;
 }
 
-.auth-left p {
-    font-size: 15px;
-    opacity: 0.9;
+.auth-brand p {
+    opacity: 0.85;
 }
 
-/* ================= RIGHT PANEL ================= */
-.auth-right {
+/* FORM SIDE */
+.auth-card {
     width: 50%;
-    height: 100vh;
-    overflow-y: auto;              /* Scroll only right side */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;       /* Important for long form */
-    padding: 40px 0;
-    background: #F2D7B6;
+    background: white;
+    padding: 40px;
+    overflow-y: auto;
 }
 
-/* ================= FORM BOX ================= */
-.auth-box {
-    width: 100%;
-    max-width: 900px;              /* FIX for 3 columns */
-    padding: 0 24px;
+#formTitle {
+    font-weight: 600;
+    margin-bottom: 20px;
 }
 
-/* ================= FORM ELEMENTS ================= */
+/* FORM ELEMENTS */
 label {
     font-size: 14px;
     font-weight: 500;
-    margin-bottom: 4px;
 }
 
 .form-control,
-.form-select {
-    height: 44px;
-    font-size: 14px;
+.form-select,
+.btn {
+    height: 46px;
+    font-size: 15px;
 }
 
 textarea.form-control {
     height: auto;
 }
 
-/* Section title sticky (Register) */
-#registerForm h4 {
-    position: sticky;
-    top: 0;
-    background: #ffffff;
-    padding: 12px 0;
-    z-index: 10;
-    border-bottom: 1px solid #e5e7eb;
+/* GENDER FIX */
+.gender-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
 }
 
-/* Buttons */
-.btn {
-    height: 44px;
+/* SWITCH */
+.switch-text {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.switch-text span {
+    color: #4f46e5;
+    cursor: pointer;
     font-weight: 500;
 }
 
-/* ================= SCROLLBAR ================= */
-.auth-right::-webkit-scrollbar {
-    width: 6px;
-}
-
-.auth-right::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 8px;
-}
-
-/* ================= RESPONSIVE ================= */
-@media (max-width: 992px) {
-    .auth-box {
-        max-width: 720px;          /* 2 columns */
-    }
-}
-
+/* MOBILE */
 @media (max-width: 768px) {
 
     body {
-        overflow-y: auto;
+        overflow: hidden;
     }
 
-    .auth-container {
+    .auth-wrapper {
         flex-direction: column;
     }
 
-    .auth-left {
-        display: none;
-    }
-
-    .auth-right {
+    .auth-brand {
         width: 100%;
-        height: auto;
-        overflow: visible;
+        height: 220px;
         padding: 20px;
     }
 
-    .auth-box {
-        max-width: 100%;
-        padding: 0;
+    .auth-card {
+        width: 100%;
+        height: calc(100vh - 220px);
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+    .auth-brand h2 {
+        font-size: 24px;
     }
 }
