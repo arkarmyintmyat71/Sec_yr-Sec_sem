@@ -46,8 +46,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private Boolean prove = false;
+    @Column(columnDefinition = "BIT(1)")
+    private Boolean prove;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Salaries> salaries = new ArrayList<>();

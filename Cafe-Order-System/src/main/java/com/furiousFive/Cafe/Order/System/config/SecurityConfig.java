@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -27,19 +28,19 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/register", "/css/**", "/js/**").permitAll()
-
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/kitchen/**").hasRole("KITCHEN")
                         .requestMatchers("/waiter/**").hasRole("WAITER")
-
                         .anyRequest().authenticated()
                 )
 
                 .formLogin(form -> form
-                        .loginPage("/")                // your auth.html
-                        .loginProcessingUrl("/login")  // form action
-                        .defaultSuccessUrl("/dashboard", true)
-                        .permitAll()
+                        .loginPage("/")
+                        .loginProcessingUrl("/login")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .successHandler(loginSuccessHandler)
+                        .failureUrl("/?error=true")
                 )
 
                 .logout(logout -> logout
@@ -60,5 +61,6 @@ public class SecurityConfig {
             AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
 }
 

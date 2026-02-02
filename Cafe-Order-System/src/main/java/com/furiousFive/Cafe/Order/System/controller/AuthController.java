@@ -4,7 +4,9 @@ import com.furiousFive.Cafe.Order.System.dto.request.LoginReqDto;
 import com.furiousFive.Cafe.Order.System.dto.request.RegisterReqDto;
 import com.furiousFive.Cafe.Order.System.model.User;
 import com.furiousFive.Cafe.Order.System.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +22,7 @@ public class AuthController {
     private final UserService userService;
 
     @GetMapping
-    public String authPage(Model model) {
+    public String authPage(@NonNull Model model) {
         model.addAttribute("loginRequest", new LoginReqDto());
         model.addAttribute("registerRequest", new RegisterReqDto());
         return "auth";

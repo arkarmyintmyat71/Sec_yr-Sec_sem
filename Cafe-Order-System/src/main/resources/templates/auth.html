@@ -29,6 +29,9 @@
 
         <!-- LOGIN -->
         <div id="loginForm">
+            <div th:if="${param.error}" class="alert alert-danger">
+                Invalid credentials or account not approved.
+            </div>
             <!-- Sticky Title -->
             <div class="form-header">
                 <h4>LogIn</h4>
@@ -86,8 +89,12 @@
                         <div class="col-md-4 col-12">
                             <label>Gender</label>
                             <div class="gender-group">
-                                <label><input type="radio" th:field="*{gender}" name="gender" value="MALE"> Male</label>
-                                <label><input type="radio" th:field="*{gender}" name="gender" value="FEMALE"> Female</label>
+                                <label>
+                                    <input type="radio" th:field="*{gender}" value="MALE"> Male
+                                </label>
+                                <label>
+                                    <input type="radio" th:field="*{gender}" value="FEMALE"> Female
+                                </label>
                             </div>
                         </div>
 

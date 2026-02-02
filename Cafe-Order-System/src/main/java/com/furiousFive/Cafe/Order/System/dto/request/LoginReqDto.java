@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class LoginReqDto {
     private String email;
     private String password;
-    private Boolean prove;
 }
