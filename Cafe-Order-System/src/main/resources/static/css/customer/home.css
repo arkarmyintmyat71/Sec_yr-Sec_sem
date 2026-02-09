@@ -15,13 +15,13 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: #B08968;
+    background: #D6BFA6;
     color: #333;
 }
 
 /* ================= NAVBAR ================= */
 .cafe-navbar {
-    background: #7A553A;
+    background: #B08968;
     border-bottom: 1px solid #ddd;
     padding: 10px 30px;
 }
@@ -36,6 +36,13 @@ body {
     color: #333;
     border: none;
 }
+
+.menu-btn i {
+    font-size: 34px;
+    transform: scale(1.15);
+    color: #3e2723;
+}
+
 .pocket-menu {
     background-color: #B08968;
     border-radius: 20px;
@@ -63,11 +70,10 @@ body {
 }
 
 /* ================= MAIN ================= */
-main {
-    flex: 1;
-    padding: 20px;
+.image-strip img {
+   width: 100%;
+   height: 480px;
 }
-
 /* ================= FOOTER ================= */
 .cafe-footer {
     background: #3B2A22;
@@ -150,8 +156,48 @@ main {
     /* Menu links */
     .pocket-menu .dropdown-item {
       font-size: 28px;
-        padding: 12px 10px;
+      padding: 12px 10px;
     }
+
+    /* ===== IMAGE STRIP ===== */
+    .image-strip img {
+      height: 480px;
+    }
+
+
+    /* ===== SEARCH BAR ===== */
+    .search-wrapper {
+        position: relative;
+        margin-top: -28px; /* overlap effect */
+        display: flex;
+        justify-content: center;
+    }
+
+    .search-box {
+        background: #e6e6e6;
+        width: 85%;
+        max-width: 320px;
+        border-radius: 30px;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+    }
+
+    .search-box i {
+        font-size: 18px;
+        color: #666;
+        margin-right: 10px;
+    }
+
+    .search-box input {
+        border: none;
+        outline: none;
+        background: transparent;
+        width: 100%;
+        font-size: 16px;
+    }
+
     /* Footer stays 3 columns */
     .footer-container {
         grid-template-columns: repeat(3, 1fr);

@@ -13,8 +13,16 @@
 <!-- NAVBAR -->
 <div th:replace="customer/fragments/navbar :: navbar"></div>
 
-<div class="container mt-5">
-    <h1>Welcome to Furious Five's Cafe ☕</h1>
+<section class="image-strip">
+    <img th:src="@{/images/images01_slide.jpg}" alt="Cafe Image">
+</section>
+
+<!-- SEARCH BAR -->
+<div class="search-wrapper">
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Drinks..." />
+    </div>
 </div>
 
 <!-- FOOTER -->
