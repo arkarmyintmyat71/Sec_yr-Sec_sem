@@ -15,32 +15,51 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: #ffffff;
+    background: #B08968;
     color: #333;
 }
 
 /* ================= NAVBAR ================= */
 .cafe-navbar {
-    background: #f8f8f8;
+    background: #7A553A;
     border-bottom: 1px solid #ddd;
     padding: 10px 30px;
 }
 
 .cafe-navbar .navbar-brand {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 28px;
     color: #333;
 }
 
-.cafe-navbar .nav-link {
+.navbar-toggler {
     color: #333;
-    font-weight: 500;
-    margin-left: 12px;
+    border: none;
+}
+.pocket-menu {
+    background-color: #B08968;
+    border-radius: 20px;
+    animation: pocketDrop 0.25s ease-out;
 }
 
-.cafe-navbar .nav-link:hover,
-.cafe-navbar .nav-link.active {
-    color: #8b4513;
+@keyframes pocketDrop {
+    from {
+        transform: translateY(-10px) scale(0.98);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.pocket-menu .dropdown-item {
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+.pocket-menu .dropdown-item:hover {
+    background: #7A553A;
 }
 
 /* ================= MAIN ================= */
@@ -51,9 +70,9 @@ main {
 
 /* ================= FOOTER ================= */
 .cafe-footer {
-    background: #3a3a3a;
+    background: #3B2A22;
     color: #ddd;
-    font-size: 14px;
+    font-size: 20px;
     margin-top: auto;
 }
 
@@ -94,65 +113,77 @@ main {
     background: #2a2a2a;
     text-align: center;
     padding: 12px;
-    font-size: 13px;
+    font-size: 16px;
     color: #aaa;
 }
 
 /* ================= RESPONSIVE ================= */
-
-/* Tablets */
-@media (max-width: 992px) {
-    .footer-container {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        padding: 30px;
-    }
-}
 
 /* Phones */
 @media (max-width: 576px) {
 
     /* Navbar */
     .cafe-navbar {
-        padding: 10px 15px;
+        padding: 14px 18px;
     }
 
     .cafe-navbar .navbar-brand {
-        font-size: 16px;
+        font-size: 32px;      /* was 28px */
+        font-weight: 700;
+        letter-spacing: 0.5px;
     }
 
     .cafe-navbar .nav-link {
-        margin: 6px 0;
+        font-size: 20px;      /* ADD THIS */
+        margin: 10px 0;
         text-align: center;
+        padding: 10px 0;      /* bigger tap area */
     }
 
+    .pocket-menu {
+         width: 90vw !important;   /* wider on mobile */
+         max-width: 320px;
+         padding: 16px !important;
+         border-radius: 18px;
+    }
+
+    /* Menu links */
+    .pocket-menu .dropdown-item {
+      font-size: 28px;
+        padding: 12px 10px;
+    }
     /* Footer stays 3 columns */
     .footer-container {
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        padding: 20px 10px;
+        gap: 16px;
+        padding: 24px 12px;
         text-align: center;
     }
 
-    /* Smaller footer text */
+    /* Footer headings */
     .cafe-footer h5 {
-        font-size: 13px;
-        margin-bottom: 6px;
+        font-size: 30px;      /* was 28px */
+        margin-bottom: 10px;
+        font-weight: 600;
     }
 
+    /* Footer text */
     .cafe-footer p,
     .cafe-footer small {
-        font-size: 11px;
-        line-height: 1.4;
+        font-size: 18px;      /* was 16px */
+        line-height: 1.6;
     }
 
+    /* Icons */
     .cafe-footer i {
-        font-size: 12px;
-        margin-right: 4px;
+        font-size: 18px;      /* was 16px */
+        margin-right: 6px;
     }
 
+    /* Footer bottom */
     .footer-bottom {
-        font-size: 11px;
-        padding: 8px;
+        font-size: 18px;      /* was 16px */
+        padding: 12px;
     }
 }
+

@@ -2,28 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <!-- ================= NAVBAR ================= -->
-<nav th:fragment="navbar" class="navbar navbar-expand-lg cafe-navbar">
-    <div class="container">
+<nav th:fragment="navbar" class="navbar cafe-navbar">
         <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-            <i class="bi bi-cup-hot-fill fs-3"></i>
-            <span>Furious Five's Cafe</span>
+            <span>☕ Furious Five</span>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cafeNavbar">
-            <span class="navbar-toggler-icon"></span>
+    <div class="dropdown ms-auto">
+        <button class="btn btn-outline-secondary dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+            ☰
         </button>
 
-        <div class="collapse navbar-collapse" id="cafeNavbar">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Coffee</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Equipment</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Gifts</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Knowledge</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
-            </ul>
+        <!-- POCKET MENU -->
+        <div class="dropdown-menu dropdown-menu-end p-3 shadow pocket-menu">
+
+            <!-- NAV LINKS -->
+            <a class="dropdown-item" href="#">Home</a>
+            <a class="dropdown-item" href="#">Coffee</a>
+            <a class="dropdown-item" href="#">Equipment</a>
+            <a class="dropdown-item" href="#">Gifts</a>
+            <a class="dropdown-item" href="#">Knowledge</a>
+            <a class="dropdown-item" href="#">About Us</a>
         </div>
     </div>
+
 </nav>
 </body>
 </html>

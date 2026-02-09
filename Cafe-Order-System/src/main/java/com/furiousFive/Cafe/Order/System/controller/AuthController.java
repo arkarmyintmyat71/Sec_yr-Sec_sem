@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,13 +18,28 @@ public class AuthController {
 
     private final UserService userService;
 
-    @GetMapping
-    public String authPage(@NonNull Model model) {
+    /* ================= LOGIN PAGE ================= */
+    @GetMapping("/login")
+    public String loginPage(Model model,
+                            @RequestParam(value = "error", required = false) String error) {
+
         model.addAttribute("loginRequest", new LoginReqDto());
-        model.addAttribute("registerRequest", new RegisterReqDto());
-        return "auth";
+
+        if (error != null) {
+            model.addAttribute("loginError", "Invalid credentials or account not approved.");
+        }
+
+        return "auth/login";
     }
 
+    /* ================= REGISTER PAGE ================= */
+    @GetMapping("/register")
+    public String registerPage(Model model) {
+        model.addAttribute("registerRequest", new RegisterReqDto());
+        return "auth/register";
+    }
+
+    /* ================= REGISTER POST ================= */
     @PostMapping("/register")
     public String userRegistration(
             @ModelAttribute("registerRequest") RegisterReqDto dto,
@@ -35,15 +47,10 @@ public class AuthController {
 
         try {
             userService.userRegistration(dto);
-            return "redirect:/";
+            return "redirect:/auth/login";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-
-            // IMPORTANT: re-add login dto
-            model.addAttribute("loginRequest", new LoginReqDto());
-
-            return "auth";
+            return "auth/register";
         }
     }
 }
-

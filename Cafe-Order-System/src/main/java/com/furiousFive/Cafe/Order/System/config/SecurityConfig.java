@@ -27,13 +27,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( "/",
-                                "/customer/**",
+                        .requestMatchers("/customer/**",
                                 "/login",
                                 "/register",
                                 "/css/**",
                                 "/js/**",
-                                "/images/**").permitAll()
+                                "/images/**" ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/kitchen/**").hasRole("KITCHEN")
                         .requestMatchers("/waiter/**").hasRole("WAITER")
@@ -41,7 +40,7 @@ public class SecurityConfig {
                 )
 
                 .formLogin(form -> form
-                        .loginPage("/")
+                        .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
@@ -51,7 +50,7 @@ public class SecurityConfig {
 
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/login")
                 );
 
         return http.build();

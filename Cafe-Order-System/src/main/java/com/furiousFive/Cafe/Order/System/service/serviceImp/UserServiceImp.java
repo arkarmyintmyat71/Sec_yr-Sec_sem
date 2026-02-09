@@ -1,7 +1,6 @@
 package com.furiousFive.Cafe.Order.System.service.serviceImp;
 
 import com.furiousFive.Cafe.Order.System.constant.Role;
-import com.furiousFive.Cafe.Order.System.dto.request.LoginReqDto;
 import com.furiousFive.Cafe.Order.System.dto.request.RegisterReqDto;
 import com.furiousFive.Cafe.Order.System.model.User;
 import com.furiousFive.Cafe.Order.System.repository.UserRepo;
@@ -42,30 +41,13 @@ public class UserServiceImp implements UserService {
         user.setAddress(dto.getAddress());
 
         // ✅ Business logic
-        user.setRole(Role.WAITER); // default role
+        user.setRole(dto.getRole()); // default role
         user.setAge(calculateAge(dto.getDob()));
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setProve(dto.getProve());
 
         return userRepo.save(user);
     }
-
-    @Override
-    public User login(LoginReqDto dto) {
-        User user = userRepo.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
-
-        if (!Boolean.TRUE.equals(user.getProve())) {
-            throw new RuntimeException("Account not approved");
-        }
-
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        return user;
-    }
-
 
     private int calculateAge(LocalDate dob) {
         if (dob == null) return 0;
