@@ -18,4 +18,4 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/cosdb?useUnicode=yes&characterEncoding=UTF-8
     username: root
-    password: Ark@r122181
+    password: Mtn2242005@
