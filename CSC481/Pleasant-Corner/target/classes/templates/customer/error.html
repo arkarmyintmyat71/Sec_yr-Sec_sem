@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Pleasant Corner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/customer/styles.css}"/>
+  <style>
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:#e8dbc8; }
+    .error-card { background:#fff; border-radius:20px; padding:40px 32px; text-align:center; max-width:340px; }
+    .error-emoji { font-size:3rem; margin-bottom:16px; }
+    h2 { font-family:'Playfair Display',serif; color:#2c2009; margin-bottom:10px; }
+    p  { color:#7a6535; font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <div class="error-card">
+    <div class="error-emoji">🪑</div>
+    <h2>Table Not Found</h2>
+    <p th:text="${error}">This table is not available.</p>
+  </div>
+</body>
+</html>

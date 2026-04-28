@@ -1,0 +1,240 @@
+/* ================================================================
+   Pleasant Corner — styles.css
+   CSS variables · Reset · Phone shell · Shared components
+   ================================================================ */
+
+/* ── Variables ─────────────────────────────────────────────────── */
+:root {
+  /* Dark theme */
+  --dark-bg:          #1a1409;
+  --dark-card:        #2b1f0a;
+  --dark-border:      #4a3520;
+  --gold:             #c9a84c;
+  --gold-hover:       #d4b86a;
+  --text-muted:       #9e8c6a;
+
+  /* Brown / café theme */
+  --brown-bg:         #c4956a;
+  --brown-dark:       #7a5c40;
+  --brown-darker:     #5a3e28;
+  --brown-card-bg:    rgba(180,120,70,0.35);
+  --brown-card-hover: rgba(180,120,70,0.52);
+
+  /* Light panel theme */
+  --off-white:        #f5f0e8;
+  --detail-bg:        #ede5d8;
+  --detail-card:      #e8dece;
+  --detail-input:     #d8cfc0;
+
+  /* Checkout theme */
+  --checkout-bg:      #c4956a;
+  --checkout-card:    #f8f3ec;
+  --checkout-method:  #f0e8d8;
+
+  /* Misc */
+  --white:            #ffffff;
+  --green:            #4caf50;
+  --green-dark:       #388e3c;
+
+  /* Typography */
+  --font-display:     'Playfair Display', serif;
+  --font-body:        'Lora', serif;
+  --font-mono:        'Crimson Text', serif;
+}
+
+/* ── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: #e8dbc8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+}
+
+/* ── Phone Shell ───────────────────────────────────────────────── */
+.phone {
+  width: 390px;
+  height: 844px;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.45), 0 0 0 2px #555;
+  position: relative;
+  background: var(--dark-bg);
+  flex-shrink: 0;
+}
+
+/* ── Screen system ─────────────────────────────────────────────── */
+.screen {
+  display: none;
+  width: 100%;
+  height: 844px;
+  flex-direction: column;
+  position: absolute;
+  top: 0; left: 0;
+  overflow: hidden;
+  animation: screenFadeIn 0.28s ease;
+}
+.screen.active { display: flex; }
+
+@keyframes screenFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Shared Buttons ────────────────────────────────────────────── */
+.btn-primary {
+  background: var(--brown-darker);
+  color: var(--white);
+  border: none;
+  border-radius: 28px;
+  padding: 16px 20px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-primary:hover  { background: #7a5030; }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+  background: #c8a87a;
+  color: #3a2810;
+  border: none;
+  border-radius: 28px;
+  padding: 15px 20px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-secondary:hover  { background: #d4b888; }
+.btn-secondary:active { transform: scale(0.98); }
+
+.btn-gold {
+  background: var(--gold);
+  color: #2b1a00;
+  border: none;
+  border-radius: 14px;
+  padding: 17px 20px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-gold:hover  { background: var(--gold-hover); }
+.btn-gold:active { transform: scale(0.98); }
+
+.btn-dark-outline {
+  background: #2b2010;
+  color: var(--white);
+  border: 1.5px solid var(--dark-border);
+  border-radius: 14px;
+  padding: 17px 20px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-dark-outline:hover  { background: #3a2a14; }
+.btn-dark-outline:active { transform: scale(0.98); }
+
+/* ── Back Button ───────────────────────────────────────────────── */
+.back-btn {
+  background: rgba(0,0,0,0.12);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: #3a2810;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  line-height: 1;
+}
+.back-btn:hover { background: rgba(0,0,0,0.22); }
+
+/* ── Cart FAB ──────────────────────────────────────────────────── */
+.cart-fab {
+  position: absolute;
+  bottom: 28px;
+  left: 24px;
+  width: 54px;
+  height: 54px;
+  background: var(--brown-darker);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.32);
+  z-index: 150;
+  transition: transform 0.15s, background 0.2s;
+}
+.cart-fab:hover  { background: #7a5030; transform: scale(1.07); }
+.cart-fab:active { transform: scale(0.94); }
+.cart-fab svg    { width: 24px; height: 24px; fill: none; stroke: var(--white); stroke-width: 1.8; }
+
+.cart-badge {
+  position: absolute;
+  top: 3px; right: 3px;
+  background: var(--gold);
+  color: #2b1a00;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  padding: 0 4px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.cart-badge.visible { display: flex; }
+
+/* ── Scrollable helper ─────────────────────────────────────────── */
+.scroll-area {
+  overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-area::-webkit-scrollbar { width: 0; }
+
+/* ── Android / Mobile Full-Screen View ─────────────────────────── */
+@media (max-width: 480px) {
+  body {
+    padding: 0;
+    background: var(--dark-bg);
+    align-items: flex-start;
+  }
+
+  .phone {
+    width: 100vw !important;
+    height: 100dvh !important;        /* dynamic viewport height — handles Android browser bars */
+    height: calc(var(--vh, 1vh) * 100) !important; /* fallback for older Android */
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+
+  .screen {
+    height: 100dvh !important;
+    height: calc(var(--vh, 1vh) * 100) !important;
+  }
+}

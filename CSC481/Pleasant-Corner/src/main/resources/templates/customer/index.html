@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title>Pleasant Corner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/customer/styles.css}"/>
+  <link rel="stylesheet" th:href="@{/css/customer/screens.css}"/>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- SCREEN 1 — Welcome (first scan) -->
+  <div class="screen active" id="screen-welcome">
+    <div class="qr-badge">QR scanned.</div>
+    <h1 class="welcome-title">Pleasant Corner</h1>
+    <p class="welcome-sub">Welcome! You're about to<br>order directly from your table.</p>
+    <div class="table-card">
+      <div class="table-label">Your Table</div>
+      <div class="table-number" id="welcomeTableName">Table —</div>
+    </div>
+    <div class="welcome-actions">
+      <button class="btn-gold" onclick="startSession()">Browse Menu</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 1b — Returning customer (table already occupied) -->
+  <div class="screen" id="screen-returning">
+    <div class="qr-badge" style="background:rgba(201,168,76,0.15);color:#c9a84c;">Welcome back!</div>
+    <h1 class="welcome-title">Pleasant Corner</h1>
+    <p class="welcome-sub">Your session is active<br>at this table.</p>
+    <div class="table-card">
+      <div class="table-label">Your Table</div>
+      <div class="table-number" id="returningTableName">Table —</div>
+    </div>
+    <div class="welcome-actions">
+      <button class="btn-gold" onclick="goTo('screen-menu')">Browse Menu</button>
+      <button class="btn-dark-outline" onclick="finalCheckout()">Checkout &amp; Done</button>
+      <button class="btn-dark-outline" onclick="loadTableHistory(); goTo('screen-history')" style="margin-top:4px;opacity:.85;">Order History</button>
+    </div>
+  </div>
+
+
+  <!-- SCREEN 2 — Menu Browse -->
+  <div class="screen" id="screen-menu">
+    <div class="menu-header">
+      <button class="back-btn" onclick="goHome()" aria-label="Back" style="flex-shrink:0;">&#8592;</button>
+      <span class="menu-logo">Pleasant Corner</span>
+      <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open categories">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="hero-banner">
+      <img th:src="@{/images/customer-menu.jpg}" alt="Coffee & Croissant"/>
+    </div>
+    <div class="scroll-area">
+      <div class="search-wrap">
+        <div class="search-bar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input id="menu-search" type="text" placeholder="Search..." autocomplete="off"/>
+        </div>
+      </div>
+      <div class="section-heading">Our Menu</div>
+      <div class="menu-grid" id="menuGrid">
+        <!-- Populated by customer.js from MENU_DATA -->
+      </div>
+    </div>
+    <button class="cart-fab" onclick="renderCartScreen(); goTo('screen-cart');" aria-label="View cart">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span class="cart-badge" id="cart-badge-menu">0</span>
+    </button>
+    <div class="sidebar-overlay" id="sidebar-overlay">
+      <div class="sidebar-backdrop" onclick="closeSidebar()"></div>
+      <nav class="sidebar-drawer" aria-label="Menu categories">
+        <div class="sidebar-title">Category</div>
+        <button class="category-link" onclick="filterByCategory('ALL');   closeSidebar()">All Items</button>
+        <button class="category-link" onclick="filterByCategory('COFFEE'); closeSidebar()">Coffee</button>
+        <button class="category-link" onclick="filterByCategory('FOOD');   closeSidebar()">Food</button>
+        <button class="category-link" onclick="filterByCategory('DESSERT');closeSidebar()">Desserts</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 — Item Detail -->
+  <div class="screen" id="screen-detail">
+    <div class="detail-hero">
+      <button class="back-btn detail-back" onclick="goTo('screen-menu')" aria-label="Back">&#8592;</button>
+      <div class="detail-img-circle" id="detail-img-circle">
+        <span id="detail-emoji">🎂</span>
+      </div>
+    </div>
+    <div class="detail-panel">
+      <div class="detail-panel-scroll">
+        <h2 class="detail-item-title" id="detail-title">Item</h2>
+        <div class="topping-header">
+          <span class="topping-badge">Topping</span>
+          <span class="topping-hint">(Select up to two options.)</span>
+        </div>
+        <div id="toppings-list"></div>
+        <textarea id="detail-note" class="request-area" placeholder="Write your additional request here..."></textarea>
+      </div>
+      <div class="detail-bottom-bar">
+        <button class="qty-btn" onclick="changeDetailQty(-1)" aria-label="Decrease">−</button>
+        <span   class="qty-display" id="detail-qty">1</span>
+        <button class="qty-btn" onclick="changeDetailQty(1)"  aria-label="Increase">+</button>
+        <button class="btn-add-item" onclick="addItemToCart()">Add Item</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4 — Cart -->
+  <div class="screen" id="screen-cart">
+    <div class="cart-header">
+      <button class="back-btn" onclick="goTo('screen-menu')" aria-label="Back">&#8592;</button>
+      <h2 class="cart-title">Your Order</h2>
+      <button onclick="loadTableHistory(); goTo('screen-history')" aria-label="Order History"
+        style="margin-left:auto;background:rgba(44,26,8,0.08);border:none;border-radius:10px;
+               padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;
+               font-family:var(--font-body);font-size:.78rem;font-weight:600;color:#5a3e20;
+               flex-shrink:0;transition:background .18s;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        History
+      </button>
+    </div>
+    <div class="cart-scroll">
+      <div id="cart-items-list"></div>
+      <div class="cart-total-card">
+        <div class="cart-total-row">
+          <span class="cart-total-label">Total</span>
+          <span class="cart-total-price" id="cart-total-price">฿0</span>
+        </div>
+        <div class="cart-note-label">Order note (Optional)</div>
+        <textarea class="cart-note-input" id="cart-note" placeholder="e.g. No ice, extra sauce..."></textarea>
+      </div>
+    </div>
+    <div class="cart-bottom">
+      <button class="btn-add-more" onclick="goTo('screen-menu')">+ Add more items</button>
+      <button class="btn-primary"  onclick="openCheckout()">Place Order</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 5 — Checkout -->
+  <div class="screen" id="screen-checkout">
+    <div class="checkout-header">
+      <button class="back-btn" onclick="goTo('screen-cart')" aria-label="Back">&#8592;</button>
+      <h2 class="checkout-title">Checkout</h2>
+    </div>
+    <div class="checkout-scroll">
+      <div class="summary-card">
+        <div class="summary-card-title">Order Summary</div>
+        <div id="checkout-summary-rows"></div>
+        <hr class="summary-divider">
+        <div class="summary-total-row">
+          <span class="summary-total-label">Total</span>
+          <span class="summary-total-price" id="checkout-total-price">฿0</span>
+        </div>
+      </div>
+      <div class="payment-card">
+        <div class="payment-card-title">Payment Method</div>
+        <div class="payment-methods-grid">
+          <button class="payment-method-btn selected" data-method="Cash" onclick="selectPaymentMethod('Cash')">
+            <span class="payment-method-name">Cash</span>
+            <span class="payment-method-sub">Pay at counter</span>
+          </button>
+          <button class="payment-method-btn" data-method="QR" onclick="selectPaymentMethod('QR')">
+            <span class="payment-method-name">QR / PromptPay</span>
+            <span class="payment-method-sub">Scan &amp; pay now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="checkout-actions">
+      <button class="btn-primary"   id="confirmOrderBtn" onclick="confirmOrder()">Confirm order</button>
+      <button class="btn-secondary" onclick="goTo('screen-cart')">Back to cart</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 6 — QR Payment -->
+  <div class="screen" id="screen-payment">
+    <div class="payment-page-scroll">
+      <h2 class="order-sent-title">Order sent to<br>the kitchen!</h2>
+      <div class="queue-card">
+        <div class="queue-label">Your Queue Number</div>
+        <div class="queue-number" id="payment-queue-number">#000</div>
+        <div class="queue-meta"  id="payment-queue-meta">Table — · 0 items · ฿0</div>
+      </div>
+      <div class="qr-card">
+        <div class="qr-scan-label">Scan to pay</div>
+        <div class="qr-code-box" id="paymentQrBox">
+          <!-- Payment QR image from backend -->
+        </div>
+        <div class="qr-amount" id="payment-qr-amount">฿0</div>
+        <div class="qr-expires">
+          Expires in <span class="qr-timer-bold" id="qr-timer">05:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="payment-actions">
+      <button class="btn-primary"   onclick="paymentDone()">Done! Tap to track</button>
+      <button class="btn-secondary" onclick="makeAnotherOrder()">Make another order</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 7 — Order Tracking -->
+  <div class="screen" id="screen-order-detail">
+    <div class="order-detail-header">
+      <button class="back-btn" onclick="goHome()" aria-label="Back">&#8592;</button>
+      <div class="order-detail-title-wrap">
+        <div class="order-detail-title" id="trackTableName">Table —</div>
+        <div class="order-detail-subtitle">Order Details</div>
+      </div>
+      <div style="width:36px;flex-shrink:0;"></div>
+    </div>
+    <div class="order-detail-scroll">
+      <div class="order-queue-tag" id="trackQueueTag">#000</div>
+      <div class="progress-tracker-card">
+        <div class="progress-steps" id="progressDots">
+          <div class="progress-step-node"><div class="progress-dot" id="dot-pending"><svg class="progress-dot-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="progress-step-node"><div class="progress-dot" id="dot-preparing"><svg class="progress-dot-icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></div></div>
+          <div class="progress-step-node"><div class="progress-dot" id="dot-ready"><svg class="progress-dot-icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></div></div>
+          <div class="progress-step-node"><div class="progress-dot" id="dot-completed"><svg class="progress-dot-icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></div></div>
+        </div>
+        <div class="progress-steps" style="margin-top:6px;">
+          <div class="progress-step-node"><span class="progress-step-label">Placed</span></div>
+          <div class="progress-step-node"><span class="progress-step-label">Preparing</span></div>
+          <div class="progress-step-node"><span class="progress-step-label">Ready</span></div>
+          <div class="progress-step-node"><span class="progress-step-label">Done!</span></div>
+        </div>
+      </div>
+      <p class="order-status-msg" id="orderStatusMsg">Your order has been placed.</p>
+      <div id="order-detail-lines"></div>
+      <div id="order-detail-discount-row" style="display:none;padding:10px 14px;background:#f0faf0;border-radius:10px;margin:8px 0;justify-content:space-between;align-items:center;">
+        <span style="font-size:.83rem;color:#16a34a;font-weight:600;" id="order-detail-discount-code"></span>
+        <span style="font-size:.83rem;color:#16a34a;font-weight:700;" id="order-detail-discount-amt"></span>
+      </div>
+      <div class="order-total-card">
+        <span class="order-total-label">Total</span>
+        <span class="order-total-amount" id="order-detail-total">฿0</span>
+      </div>
+    </div>
+    <div class="order-detail-actions">
+      <button class="btn-secondary" onclick="makeAnotherOrder()">Make Another Order</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 8 — Track (from Welcome) -->
+  <div class="screen" id="screen-track">
+    <div class="track-header-row">
+      <button class="track-header-back" onclick="goHome()" aria-label="Back">&#8592;</button>
+      <h2 class="track-title">Track My Order</h2>
+    </div>
+    <div class="track-status-card">
+      <div class="track-status-label">Current Status</div>
+      <div class="track-status-value" id="trackStatusValue">No active order</div>
+    </div>
+    <div class="track-steps">
+      <div class="track-step">
+        <div class="step-indicator"><div class="step-dot" id="track-dot-pending"></div><div class="step-connector"></div></div>
+        <span class="step-label" id="track-lbl-pending">Order Received</span>
+      </div>
+      <div class="track-step">
+        <div class="step-indicator"><div class="step-dot" id="track-dot-preparing"></div><div class="step-connector"></div></div>
+        <span class="step-label" id="track-lbl-preparing">Being Prepared</span>
+      </div>
+      <div class="track-step">
+        <div class="step-indicator"><div class="step-dot" id="track-dot-ready"></div><div class="step-connector"></div></div>
+        <span class="step-label" id="track-lbl-ready">Ready to Serve</span>
+      </div>
+      <div class="track-step">
+        <div class="step-indicator"><div class="step-dot" id="track-dot-completed"></div></div>
+        <span class="step-label" id="track-lbl-completed">Delivered</span>
+      </div>
+    </div>
+    <div class="track-back-btn-wrap">
+      <button class="btn-gold" onclick="goHome()">Back to Home</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 9 — Order History (this table) -->
+  <div class="screen" id="screen-history">
+    <div class="order-detail-header">
+      <button class="back-btn" onclick="goHome()" aria-label="Back">&#8592;</button>
+      <div class="order-detail-title-wrap">
+        <div class="order-detail-title" id="historyTableName">Table —</div>
+        <div class="order-detail-subtitle">Order History</div>
+      </div>
+      <div style="width:36px;flex-shrink:0;"></div>
+    </div>
+    <div class="order-detail-scroll" id="historyList" style="padding:16px;">
+      <div style="text-align:center;padding:40px 0;color:#9e8c6a;font-style:italic;">Loading…</div>
+    </div>
+  </div>
+
+  <!-- SCREEN 10 — History Order Detail -->
+  <div class="screen" id="screen-history-detail">
+    <div class="order-detail-header">
+      <button class="back-btn" onclick="goTo('screen-history')" aria-label="Back">&#8592;</button>
+      <div class="order-detail-title-wrap">
+        <div class="order-detail-title" id="histDetailTableName">Table —</div>
+        <div class="order-detail-subtitle">Order Details</div>
+      </div>
+      <div style="width:36px;flex-shrink:0;"></div>
+    </div>
+    <div class="order-detail-scroll">
+      <!-- Queue tag -->
+      <div class="order-queue-tag" id="histDetailQueue">#000</div>
+
+      <!-- Progress tracker — same style as live order screen -->
+      <div class="progress-tracker-card">
+        <div class="progress-steps" id="histProgressDots">
+          <div class="progress-step-node"><div class="progress-dot" id="histDot-pending"><svg class="progress-dot-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="progress-step-node"><div class="progress-dot" id="histDot-preparing"><svg class="progress-dot-icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></div></div>
+          <div class="progress-step-node"><div class="progress-dot" id="histDot-ready"><svg class="progress-dot-icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></div></div>
+          <div class="progress-step-node"><div class="progress-dot" id="histDot-completed"><svg class="progress-dot-icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></div></div>
+        </div>
+        <div class="progress-steps" style="margin-top:6px;">
+          <div class="progress-step-node"><span class="progress-step-label">Placed</span></div>
+          <div class="progress-step-node"><span class="progress-step-label">Preparing</span></div>
+          <div class="progress-step-node"><span class="progress-step-label">Ready</span></div>
+          <div class="progress-step-node"><span class="progress-step-label">Done!</span></div>
+        </div>
+      </div>
+
+      <!-- Status message -->
+      <p class="order-status-msg" id="histDetailStatus"></p>
+
+      <!-- Items -->
+      <div id="histDetailLines"></div>
+
+      <!-- Discount row -->
+      <div id="histDetailDiscountRow" style="display:none;">
+        <span id="histDetailDiscountCode"></span>
+        <span id="histDetailDiscountAmt"></span>
+      </div>
+
+      <!-- Total -->
+      <div class="order-total-card">
+        <span class="order-total-label">Total</span>
+        <span class="order-total-amount" id="histDetailTotal">฿0</span>
+      </div>
+
+      <!-- Payment method -->
+      <div style="text-align:center;margin-top:10px;font-size:.82rem;color:#9e8c6a;" id="histDetailMethod"></div>
+    </div>
+    <div class="order-detail-actions">
+      <button class="btn-secondary" onclick="makeAnotherOrder()">Make Another Order</button>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<!-- Inject backend data — same pattern as staff.html -->
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var BACKEND_TABLE = {
+    id:          /*[[${table.id}]]*/ 0,
+    tableNumber: /*[[${table.tableNumber}]]*/ 0,
+    seats:       /*[[${table.seats}]]*/ 0,
+    locationNote:/*[[${table.locationNote}]]*/ ''
+  };
+  var BACKEND_MENU       = /*[[${menuItems}]]*/ [];
+  var BACKEND_TOPPINGS   = /*[[${toppings}]]*/ [];
+  var BACKEND_DRINK_STATES = /*[[${drinkStates}]]*/ [];
+  var PAYMENT_QR_DATA_URL = /*[[${paymentQrDataUrl}]]*/ '';
+  /*]]>*/
+</script>
+<script th:src="@{/js/customer/data.js}"></script>
+<script th:src="@{/js/customer/app.js}"></script>
+<script>
+  // Fix for Android browser dynamic viewport height (address bar shows/hides)
+  function setVh() {
+    document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+  }
+  setVh();
+  window.addEventListener('resize', setVh);
+  window.addEventListener('orientationchange', function() { setTimeout(setVh, 150); });
+</script>
+</body>
+</html>

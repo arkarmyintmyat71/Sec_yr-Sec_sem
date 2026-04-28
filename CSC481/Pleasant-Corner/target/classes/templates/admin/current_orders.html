@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pleasant Corner – Current Orders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/current_order_style.css}"/>
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- SIDEBAR -->
+  <div th:replace="~{admin/fragments :: sidebar('current-orders')}"></div>
+
+  <div class="main-panel" id="mainPanel">
+
+    <!-- TOPBAR -->
+    <div th:replace="~{admin/fragments :: topbar('Current Orders')}"></div>
+
+    <div class="page-content" id="mainContent">
+      <div class="co-search-wrap">
+        <i class="bi bi-search co-search-icon"></i>
+        <input type="text" id="coSearchInput" class="co-search" placeholder="Search table, queue......" autocomplete="off"/>
+      </div>
+
+      <div class="co-table-wrap">
+        <table class="co-table" id="coTable">
+          <thead>
+            <tr>
+              <th>Queue</th><th>Table</th><th>Items</th>
+              <th>Total</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="coBody">
+            <!-- Rows populated by overview.js from /api/orders/active -->
+          </tbody>
+        </table>
+        <div class="co-empty" id="coEmpty">
+          <i class="bi bi-search"></i>
+          <p>No orders match your search.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER DETAIL MODAL -->
+<div id="odOverlay" class="od-overlay" role="dialog" aria-modal="true" aria-labelledby="odQueueLabel">
+  <div class="od-panel">
+    <button class="od-close" id="odClose" aria-label="Close"><i class="bi bi-x"></i></button>
+    <div class="od-header">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div id="odQueueLabel" class="od-queue"></div>
+        <span class="od-status-badge" id="odStatusBadge"><span class="od-status-dot"></span><span id="odStatusText"></span></span>
+      </div>
+      <div class="od-meta" id="odMeta"></div>
+    </div>
+    <div class="od-section-title">Order Items</div>
+    <div class="od-items" id="odItems"></div>
+    <div class="od-divider"></div>
+    <div class="od-totals" id="odTotals"></div>
+    <div class="od-payment" id="odPayment">
+      <div class="od-payment-icon"><i class="bi bi-cash-coin"></i></div>
+      <div>
+        <div class="od-payment-label">Payment: Cash</div>
+        <div class="od-payment-note">Customer will pay at counter</div>
+      </div>
+    </div>
+    <div class="od-timeline-title">Order Timeline</div>
+    <div class="od-timeline" id="odTimeline"></div>
+    <div class="od-actions" id="odActions">
+      <button class="od-btn-cancel" id="odBtnCancel">Cancel</button>
+      <button class="od-btn-ready" id="odBtnReady">Mark as Ready →</button>
+    </div>
+  </div>
+</div>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var initialOrders = /*[[${orders}]]*/ [];
+  /*]]>*/
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/overview.js}"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pleasant Corner – Staff Members</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/staff_style.css}"/>
+</head>
+<body>
+<div id="appWrapper" class="app-wrapper">
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- SIDEBAR -->
+  <div th:replace="~{admin/fragments :: sidebar('staff')}"></div>
+
+  <div class="main-panel" id="mainPanel">
+    <div th:replace="~{admin/fragments :: topbar('Staff Members')}"></div>
+
+    <main class="page-content">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:4px;">
+        <p class="page-desc" style="margin:0;">Review new staff registration requests. Approved staff will gain access to the system. You can also set their salary after approval.</p>
+        <a th:href="@{/admin/staff/add}" style="padding:8px 18px;background:#2c2009;color:#e8c96a;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;">+ Add Staff Member</a>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="sr-filter-tabs">
+        <button class="sr-tab active" data-filter="all">All</button>
+        <button class="sr-tab" data-filter="pending">Pending</button>
+        <button class="sr-tab" data-filter="approved">Approved</button>
+        <button class="sr-tab" data-filter="rejected">Rejected</button>
+      </div>
+
+      <!-- Staff Cards (populated by staff.js) -->
+      <div class="sr-cards-list" id="staffCardsList"></div>
+    </main>
+  </div>
+</div>
+
+<!-- VIEW DETAILS MODAL -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content dm-content">
+      <div class="dm-header">
+        <div class="dm-avatar" id="dmAvatar"></div>
+        <div class="dm-header-info">
+          <div class="dm-name" id="dmName"></div>
+          <div class="dm-role-status">
+            <span class="sr-badge-role" id="dmRole"></span>
+            <span class="sr-badge-status" id="dmStatus"></span>
+          </div>
+        </div>
+        <button class="dm-close" data-bs-dismiss="modal"><i class="bi bi-x"></i></button>
+      </div>
+      <div class="dm-body">
+        <div class="dm-detail-row"><i class="bi bi-envelope"></i><span id="dmEmail"></span></div>
+        <div class="dm-detail-row"><i class="bi bi-telephone"></i><span id="dmPhone"></span></div>
+        <div class="dm-detail-row"><i class="bi bi-calendar3"></i><span id="dmRegistered"></span></div>
+        <div class="dm-divider"></div>
+        <div class="dm-detail-row"><i class="bi bi-briefcase"></i><span id="dmExperience"></span></div>
+        <div class="dm-detail-row"><i class="bi bi-clock"></i><span id="dmAvailability"></span></div>
+        <div class="dm-detail-row"><i class="bi bi-currency-dollar"></i><span id="dmSalary"></span></div>
+        <div class="dm-divider" id="dmNotesDivider"></div>
+        <div id="dmNotesWrap" class="dm-detail-row dm-notes-row" style="display:none">
+          <i class="bi bi-chat-left-text"></i><span id="dmNotes"></span>
+        </div>
+        <div id="dmSalarySetWrap" style="display:none">
+          <div class="dm-divider"></div>
+          <div class="dm-salary-set">
+            <label class="dm-salary-label">Set Monthly Salary (฿)</label>
+            <div class="dm-salary-input-row">
+              <input type="number" class="dm-salary-input" id="dmSalaryInput" placeholder="e.g. 18000" min="0"/>
+              <button class="dm-salary-btn" id="dmSalaryBtn">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dm-footer" id="dmFooter"></div>
+    </div>
+  </div>
+</div>
+
+<!-- REJECT REASON MODAL -->
+<div class="modal fade" id="rejectModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content dm-content">
+      <div class="dm-header" style="padding-bottom:14px">
+        <div class="dm-name" style="font-size:1.1rem">Reject Application</div>
+        <button class="dm-close" data-bs-dismiss="modal"><i class="bi bi-x"></i></button>
+      </div>
+      <div class="dm-body">
+        <p style="font-size:.88rem;color:var(--text-mid);margin-bottom:14px;">Please provide a reason for rejecting this application.</p>
+        <div style="margin-top:10px">
+          <label class="dm-salary-label">Notes (optional)</label>
+          <textarea class="sr-input sr-textarea" id="rejectNotes" placeholder="Additional notes…"></textarea>
+        </div>
+      </div>
+      <div class="dm-footer">
+        <button class="sr-btn-cancel" data-bs-dismiss="modal">Cancel</button>
+        <button class="sr-btn-reject-confirm" id="rejectConfirmBtn">Confirm Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script th:inline="javascript">
+  let staffList = [[${staffList}]] || [];
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/staff.js}"></script>
+</body>
+</html>

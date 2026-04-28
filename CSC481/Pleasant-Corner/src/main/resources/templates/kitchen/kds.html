@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pleasant Corner Kitchen – KDS</title>
+  <link rel="stylesheet" th:href="@{/css/kitchen_style.css}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="kds-header">
+    <div class="header-brand">
+      <span class="brand-name">Pleasant Corner Kitchen</span>
+      <span class="brand-sub">Display System</span>
+    </div>
+
+    <div class="header-clock">
+      <div id="clock" class="clock-digits">00:00:00</div>
+      <div id="date-display" class="clock-date">—</div>
+    </div>
+
+    <div class="header-controls">
+      <div class="legend">
+        <span class="dot dot-pending"></span> Pending
+        <span class="dot dot-preparing"></span> Preparing
+        <span class="dot dot-ready"></span> Ready
+      </div>
+      <!-- Exit posts a logout form so Spring Security clears the session properly -->
+      <form th:action="@{/logout}" method="post" style="display:inline;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn-exit">Exit KDS</button>
+      </form>
+    </div>
+  </header>
+
+  <!-- TICKET GRID — populated by kitchen.js -->
+  <main class="kds-grid" id="ticket-grid"></main>
+
+  <!-- Inject initial ticket data from backend (same pattern as staff.html) -->
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    var initialTickets = /*[[${tickets}]]*/ [];
+    /*]]>*/
+  </script>
+
+  <script th:src="@{/js/kitchen.js}"></script>
+</body>
+</html>

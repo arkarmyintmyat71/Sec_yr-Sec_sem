@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- ═══════════════════════════════════════════
+     SIDEBAR FRAGMENT
+════════════════════════════════════════════ -->
+<aside th:fragment="sidebar(activePage)" id="sidebar" class="sidebar">
+  <div class="sidebar-brand">Pleasant Corner</div>
+
+  <nav class="sidebar-nav">
+    <p class="nav-label">Overview</p>
+    <a th:href="@{/admin/dashboard}"
+       th:classappend="${activePage == 'dashboard'} ? 'active'"
+       class="nav-item">Dashboard</a>
+    <a th:href="@{/admin/current-orders}"
+       th:classappend="${activePage == 'current-orders'} ? 'active'"
+       class="nav-item">Current Orders</a>
+    <a th:href="@{/admin/order-history}"
+       th:classappend="${activePage == 'order-history'} ? 'active'"
+       class="nav-item">Order History</a>
+
+    <p class="nav-label">Menu</p>
+    <a th:href="@{/admin/menu-items}"
+       th:classappend="${activePage == 'menu-items'} ? 'active'"
+       class="nav-item">Menu Items</a>
+    <a th:href="@{/admin/toppings}"
+       th:classappend="${activePage == 'toppings'} ? 'active'"
+       class="nav-item">Toppings</a>
+    <a th:href="@{/admin/drink-states}"
+       th:classappend="${activePage == 'drink-states'} ? 'active'"
+       class="nav-item">Drink States</a>
+    <a th:href="@{/admin/tables-qr}"
+       th:classappend="${activePage == 'tables-qr'} ? 'active'"
+       class="nav-item">Tables &amp; QR</a>
+    <a th:href="@{/admin/payments}"
+       th:classappend="${activePage == 'payments'} ? 'active'"
+       class="nav-item">Payments</a>
+    <a th:href="@{/admin/discounts}"
+       th:classappend="${activePage == 'discounts'} ? 'active'"
+       class="nav-item">Discounts &amp; Promos</a>
+
+    <p class="nav-label">Staff</p>
+    <a th:href="@{/admin/staff}"
+       th:classappend="${activePage == 'staff'} ? 'active'"
+       class="nav-item">Staff Members</a>
+0
+    <p class="nav-label">System</p>
+    <form th:action="@{/logout}" method="post" style="display:inline">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <button type="submit" class="nav-item" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;">Log out</button>
+    </form>
+  </nav>
+</aside>
+
+<!-- ═══════════════════════════════════════════
+     TOPBAR FRAGMENT
+════════════════════════════════════════════ -->
+<header th:fragment="topbar(pageTitle)" class="topbar">
+  <div class="topbar-left">
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle sidebar">
+      <i class="bi bi-list"></i>
+    </button>
+    <h1 class="page-title" th:text="${pageTitle}">Dashboard</h1>
+  </div>
+  <div class="topbar-right">
+    <div class="admin-avatar" sec:authentication="name" style="text-transform:uppercase">AD</div>
+    <span class="admin-name" sec:authentication="name">Admin</span>
+  </div>
+</header>
+
+</html>

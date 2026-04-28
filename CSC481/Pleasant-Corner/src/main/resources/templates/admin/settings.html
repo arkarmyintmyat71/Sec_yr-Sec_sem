@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pleasant Corner – Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/dashboard_style.css}"/>
+  <style>
+    .settings-card { background: var(--card-bg, #fff); border-radius: 14px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,.07); }
+    .settings-card h5 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 18px; color: #2c2c2c; }
+    .settings-field { margin-bottom: 16px; }
+    .settings-field label { display: block; font-size: .85rem; font-weight: 500; margin-bottom: 6px; color: #555; }
+    .settings-field input, .settings-field select { width: 100%; padding: 10px 14px; border: 1.5px solid #e0d9cc; border-radius: 8px; font-size: .93rem; background: #faf8f4; }
+    .settings-field input:focus, .settings-field select:focus { outline: none; border-color: #b8923a; }
+    .btn-save-settings { background: #b8923a; color: #fff; border: none; border-radius: 8px; padding: 10px 28px; font-size: .93rem; cursor: pointer; transition: background .2s; }
+    .btn-save-settings:hover { background: #9a7830; }
+  </style>
+</head>
+<body>
+<div id="appWrapper" class="app-wrapper">
+
+  <!-- SIDEBAR -->
+  <div th:replace="~{admin/fragments :: sidebar('settings')}"></div>
+
+  <div class="main-panel" id="mainPanel">
+    <div th:replace="~{admin/fragments :: topbar('Settings')}"></div>
+
+    <main class="page-content">
+
+      <!-- Cafe Info -->
+      <div class="settings-card">
+        <h5><i class="bi bi-shop me-2"></i>Cafe Information</h5>
+        <div class="row g-3">
+          <div class="col-md-6 settings-field">
+            <label>Cafe Name</label>
+            <input type="text" value="Pleasant Corner"/>
+          </div>
+          <div class="col-md-6 settings-field">
+            <label>Phone Number</label>
+            <input type="text" placeholder="+66 xx xxx xxxx"/>
+          </div>
+          <div class="col-12 settings-field">
+            <label>Address</label>
+            <input type="text" placeholder="Street, City, Province"/>
+          </div>
+          <div class="col-md-6 settings-field">
+            <label>Opening Time</label>
+            <input type="time" value="08:00"/>
+          </div>
+          <div class="col-md-6 settings-field">
+            <label>Closing Time</label>
+            <input type="time" value="21:00"/>
+          </div>
+        </div>
+        <button class="btn-save-settings mt-2">Save Changes</button>
+      </div>
+
+      <!-- Admin Account -->
+      <div class="settings-card">
+        <h5><i class="bi bi-person-lock me-2"></i>Admin Account</h5>
+        <div class="row g-3">
+          <div class="col-md-6 settings-field">
+            <label>Username</label>
+            <input type="text" th:value="${adminName}"/>
+          </div>
+          <div class="col-md-6 settings-field">
+            <label>Email</label>
+            <input type="email" placeholder="admin@pleasantcorner.cafe"/>
+          </div>
+          <div class="col-md-6 settings-field">
+            <label>New Password</label>
+            <input type="password" placeholder="Leave blank to keep current"/>
+          </div>
+          <div class="col-md-6 settings-field">
+            <label>Confirm New Password</label>
+            <input type="password" placeholder="Repeat new password"/>
+          </div>
+        </div>
+        <button class="btn-save-settings mt-2">Update Account</button>
+      </div>
+
+
+      <!-- ngrok & Customer QR -->
+      <div class="settings-card">
+        <h5><i class="bi bi-qr-code me-2"></i>Customer QR Codes &amp; ngrok</h5>
+        <p style="font-size:.85rem;color:#7a6535;margin-bottom:18px;">
+          When using <strong>ngrok</strong>, enter your public URL below so that
+          table QR codes point to a URL your customers' phones can reach.
+          After saving, click <em>Regenerate All QR Codes</em> to update every table.
+        </p>
+        <div class="settings-field">
+          <label>ngrok Public URL <span style="font-weight:400;color:#a8975e;">(e.g. https://abc123.ngrok-free.app)</span></label>
+          <input type="text" id="ngrokUrlInput" placeholder="https://abc123.ngrok-free.app"
+                 th:value="${ngrokBaseUrl}"/>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;">
+          <button class="btn-save-settings" id="saveNgrokBtn">
+            <i class="bi bi-save me-1"></i> Save URL
+          </button>
+          <button class="btn-save-settings" id="regenQrBtn"
+                  style="background:#b8923a;">
+            <i class="bi bi-arrow-clockwise me-1"></i> Regenerate All QR Codes
+          </button>
+        </div>
+        <div id="ngrokStatus" style="margin-top:10px;font-size:.83rem;color:#7a6535;display:none;"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  /* ── ngrok URL save + QR regenerate ── */
+  document.getElementById('saveNgrokBtn').addEventListener('click', async function () {
+    const url    = document.getElementById('ngrokUrlInput').value.trim();
+    const status = document.getElementById('ngrokStatus');
+    status.style.display = '';
+    status.textContent   = 'Saving…';
+    try {
+      const res = await fetch('/api/settings/ngrok', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ ngrokBaseUrl: url })
+      });
+      if (!res.ok) throw new Error(res.status);
+      status.textContent = '✓ URL saved. Click Regenerate to update QR codes.';
+      status.style.color = '#16a34a';
+    } catch(e) {
+      status.textContent = '✕ Could not save URL: ' + e.message;
+      status.style.color = '#c0392b';
+    }
+  });
+
+  document.getElementById('regenQrBtn').addEventListener('click', async function () {
+    const status = document.getElementById('ngrokStatus');
+    status.style.display = '';
+    status.style.color   = '#7a6535';
+    status.textContent   = 'Regenerating QR codes…';
+    try {
+      const res = await fetch('/api/tables/regenerate-all-qr', { method: 'PATCH' });
+      if (!res.ok) throw new Error(res.status);
+      const data = await res.json();
+      status.textContent = '✓ Regenerated QR codes for ' + data.regenerated + ' tables.';
+      status.style.color = '#16a34a';
+    } catch(e) {
+      status.textContent = '✕ Regeneration failed: ' + e.message;
+      status.style.color = '#c0392b';
+    }
+  });
+</script>
+</body>
+</html>

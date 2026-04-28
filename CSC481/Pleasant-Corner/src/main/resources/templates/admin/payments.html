@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pleasant Corner – Payments</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/payments_style.css}"/>
+  <style>
+    .qr-dropzone {
+      border: 2px dashed #d6c499;
+      border-radius: 14px;
+      background: #fdf9f2;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .18s, background .18s;
+      margin: 14px 0;
+    }
+    .qr-dropzone:hover, .qr-dropzone.drag-over { border-color: #b8923a; background: #fdf5e4; }
+    .qr-dropzone-icon { font-size: 2rem; color: #b8923a; margin-bottom: 10px; }
+    .qr-dropzone-title { font-size: .95rem; font-weight: 600; color: #2c2009; margin-bottom: 4px; }
+    .qr-dropzone-sub { font-size: .8rem; color: #a8975e; }
+    .qr-dropzone-sub a { color: #b8923a; text-decoration: underline; cursor: pointer; }
+    .qr-dropzone-hint { font-size: .72rem; color: #c4b08a; margin-top: 4px; }
+    .qr-preview-wrap { position: relative; margin: 14px 0; }
+    .qr-preview-wrap img { width: 100%; border-radius: 10px; border: 1px solid #e6dcc5; }
+    .qr-preview-remove { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,.9); border: 1px solid #e6dcc5; border-radius: 6px; padding: 4px 10px; font-size: .75rem; color: #c0392b; cursor: pointer; }
+
+    /* ── Payment Transactions Table ── */
+    .pay-txn-section {
+      margin-top: 28px;
+    }
+    .pay-txn-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .pay-txn-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2c2009;
+    }
+    .pay-txn-sub {
+      font-size: .82rem;
+      color: #a8975e;
+      margin-top: 2px;
+    }
+    .pay-txn-filter {
+      display: flex;
+      gap: 6px;
+    }
+    .pay-txn-tab {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 16px;
+      border-radius: 50px;
+      border: 1.5px solid #e6dcc5;
+      background: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .83rem;
+      font-weight: 500;
+      color: #7a6535;
+      cursor: pointer;
+      transition: background .18s, border-color .18s, color .18s;
+    }
+    .pay-txn-tab:hover { border-color: #b8923a; color: #b8923a; }
+    .pay-txn-tab.active {
+      background: #2c2009;
+      border-color: #2c2009;
+      color: #e8c96a;
+    }
+    .pay-txn-wrap {
+      background: #fff;
+      border: 1px solid #e6dcc5;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .pay-txn-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+    }
+    .pay-txn-table thead tr {
+      background: #fdf8ef;
+      border-bottom: 1px solid #e6dcc5;
+    }
+    .pay-txn-table th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #b8923a;
+    }
+    .pay-txn-table td {
+      padding: 13px 16px;
+      color: #2c2009;
+      border-bottom: 1px solid #f5f0e5;
+      vertical-align: middle;
+    }
+    .pay-txn-table tbody tr:last-child td { border-bottom: none; }
+    .pay-txn-table tbody tr:hover { background: #fdf9f2; }
+    .pay-txn-queue {
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      color: #2c2009;
+    }
+    .pay-txn-table-cell { color: #7a6535; }
+    .pay-txn-items {
+      color: #7a6535;
+      max-width: 260px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pay-txn-method {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 50px;
+      font-size: .78rem;
+      font-weight: 600;
+    }
+    .pay-txn-method.cash {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    .pay-txn-method.qr {
+      background: #ede7f6;
+      color: #5e35b1;
+    }
+    .pay-txn-method.other {
+      background: #f5f0e1;
+      color: #7a6535;
+    }
+    .pay-txn-amount {
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      color: #2c2009;
+      white-space: nowrap;
+    }
+    .pay-txn-time {
+      color: #a8975e;
+      font-size: .83rem;
+      white-space: nowrap;
+    }
+    .pay-txn-empty {
+      text-align: center;
+      padding: 48px 20px;
+      color: #a8975e;
+    }
+    .pay-txn-empty i { font-size: 2.2rem; display: block; margin-bottom: 10px; opacity: .4; }
+    .pay-txn-empty p { font-size: .9rem; }
+  </style>
+  </style>
+</head>
+<body>
+<div id="appWrapper" class="app-wrapper">
+  <div id="sidebarOverlay"></div>
+  <div th:replace="~{admin/fragments :: sidebar('payments')}"></div>
+  <div class="main-panel" id="mainPanel">
+    <div th:replace="~{admin/fragments :: topbar('Payments')}"></div>
+    <main class="page-content">
+      <div class="pay-grid">
+
+        <!-- Cash Payment -->
+        <div class="pay-card">
+          <div class="pay-card-header">
+            <div class="pay-method-icon pay-icon-cash"><i class="bi bi-cash-stack"></i></div>
+            <div class="pay-method-name">Cash Payment</div>
+            <label class="pay-toggle-switch ms-auto">
+              <input type="checkbox" id="cashEnabled" checked/>
+              <span class="pay-toggle-slider"></span>
+            </label>
+          </div>
+          <p class="pay-desc">Customer pays in cash at the counter after the order is ready.</p>
+          <div class="pay-rule-row">
+            <span class="pay-rule-label">Show cash prompt to customer</span>
+            <label class="pay-toggle-switch">
+              <input type="checkbox" id="cashPrompt" checked/>
+              <span class="pay-toggle-slider"></span>
+            </label>
+          </div>
+          <div class="pay-rule-row">
+            <span class="pay-rule-label">Require staff confirmation</span>
+            <label class="pay-toggle-switch">
+              <input type="checkbox" id="cashConfirm" checked/>
+              <span class="pay-toggle-slider"></span>
+            </label>
+          </div>
+          <div class="pay-revenue-box">
+            <div class="pay-revenue-label">TODAY'S CASH REVENUE</div>
+            <div class="pay-revenue-amount" th:text="'฿' + ${#numbers.formatDecimal(todayCashRevenue, 1, 'COMMA', 0, 'POINT')}">฿0</div>
+            <div class="pay-revenue-sub" th:text="${todayCashCount} + ' transactions'">0 transactions</div>
+          </div>
+        </div>
+
+        <!-- QR Payment -->
+        <div class="pay-card">
+          <div class="pay-card-header">
+            <div class="pay-method-icon pay-icon-qr"><i class="bi bi-qr-code"></i></div>
+            <div class="pay-method-name">QR Payment (PromptPay)</div>
+            <label class="pay-toggle-switch ms-auto">
+              <input type="checkbox" id="qrEnabled" checked/>
+              <span class="pay-toggle-slider"></span>
+            </label>
+          </div>
+          <p class="pay-desc">Customer scans a QR code to pay via mobile banking or PromptPay.</p>
+          <div class="pay-revenue-box">
+            <div class="pay-revenue-label">TODAY'S QR REVENUE</div>
+            <div class="pay-revenue-amount" th:text="'฿' + ${#numbers.formatDecimal(todayQrRevenue, 1, 'COMMA', 0, 'POINT')}">฿0</div>
+            <div class="pay-revenue-sub" th:text="${todayQrCount} + ' transactions'">0 transactions</div>
+          </div>
+
+          <!-- QR Image Upload -->
+          <div class="pay-label" style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7a6535;margin-top:16px;margin-bottom:4px;">QR Code Image</div>
+          <div id="qrImageDropzone" class="qr-dropzone">
+            <div class="qr-dropzone-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+            <div class="qr-dropzone-title">Drop QR image here</div>
+            <div class="qr-dropzone-sub">or <a id="qrBrowseLink">click to browse</a></div>
+            <div class="qr-dropzone-hint">JPG, PNG · Max 5MB</div>
+            <input type="file" id="qrImageInput" accept="image/*" style="display:none"/>
+          </div>
+          <div id="qrImagePreviewWrap" class="qr-preview-wrap" style="display:none;">
+            <img id="qrImagePreview" src="" alt="QR Code"/>
+            <button class="qr-preview-remove" id="qrImageRemove">✕ Remove</button>
+          </div>
+
+          <button class="pay-btn-save" id="saveQrBtn">Save QR Settings</button>
+        </div>
+
+      </div>
+
+      <!-- ════════════════════════════════════════
+           TODAY'S PAYMENT TRANSACTIONS
+      ════════════════════════════════════════ -->
+      <div class="pay-txn-section">
+        <div class="pay-txn-header">
+          <div>
+            <div class="pay-txn-title">Today's Transactions</div>
+            <div class="pay-txn-sub" id="txnSub">Loading…</div>
+          </div>
+          <div class="pay-txn-filter" id="txnFilter">
+            <button class="pay-txn-tab active" data-method="all">All</button>
+            <button class="pay-txn-tab" data-method="Cash">
+              <i class="bi bi-cash-stack"></i> Cash
+            </button>
+            <button class="pay-txn-tab" data-method="QR">
+              <i class="bi bi-qr-code"></i> QR
+            </button>
+          </div>
+        </div>
+
+        <div class="pay-txn-wrap">
+          <table class="pay-txn-table" id="txnTable">
+            <thead>
+              <tr>
+                <th>Queue</th>
+                <th>Table</th>
+                <th>Items</th>
+                <th>Method</th>
+                <th>Amount</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="txnBody">
+              <!-- Populated by payments JS below -->
+            </tbody>
+          </table>
+          <div class="pay-txn-empty" id="txnEmpty" style="display:none;">
+            <i class="bi bi-receipt"></i>
+            <p>No transactions yet today.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var initialTransactions = /*[[${transactions}]]*/ [];
+  var savedPaymentQr      = /*[[${savedPaymentQr}]]*/ '';
+  /*]]>*/
+</script>
+<script>
+  // Auto-load previously saved QR code when page opens
+  window.addEventListener('DOMContentLoaded', function() {
+    if (savedPaymentQr && savedPaymentQr.startsWith('data:')) {
+      var preview     = document.getElementById('qrImagePreview');
+      var dropzone    = document.getElementById('qrImageDropzone');
+      var previewWrap = document.getElementById('qrImagePreviewWrap');
+      if (preview)     preview.src               = savedPaymentQr;
+      if (dropzone)    dropzone.style.display    = 'none';
+      if (previewWrap) previewWrap.style.display = '';
+    }
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/pages.js}"></script>
+</body>
+</html>

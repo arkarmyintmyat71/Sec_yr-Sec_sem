@@ -1,0 +1,43 @@
+server:
+  address: 0.0.0.0
+  port: 8001
+
+spring:
+  application:
+    name: Pleasant-Corner
+
+  # Thymeleaf
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+  # JPA / Hibernate
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    default-property-inclusion: non_null
+  # DataSource
+  datasource:
+    url: jdbc:mysql://localhost:3306/pcdb5?useUnicode=yes&characterEncoding=UTF-8
+    username: root
+    password: Ark@r122181
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# ── Pleasant Corner App Settings ──────────────────────────────
+app:
+  # Set this to your ngrok public URL (no trailing slash) before running.
+  # Example: https://abc123.ngrok-free.app
+  # Leave blank to use localhost — QR codes will use http://localhost:8001
+  ngrok-base-url: "https://fawn-encephalographic-scaly.ngrok-free.dev"

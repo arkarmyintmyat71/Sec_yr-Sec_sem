@@ -1,0 +1,354 @@
+/* ============================================================
+   PLEASANT CORNER KITCHEN – KDS  |  styles.css
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #141414;
+  --surface:     #1e1e1e;
+  --surface-2:   #272727;
+  --border:      #2e2e2e;
+
+  --text:        #f0ede6;
+  --text-muted:  #888;
+  --text-dim:    #555;
+
+  --gold:        #e8b84b;
+  --gold-dim:    #9a7830;
+  --blue:        #5b9ef4;
+  --green:       #4cbb82;
+  --red:         #e85b5b;
+  --orange:      #e8854b;
+
+  --status-pending:    var(--gold);
+  --status-preparing:  var(--blue);
+  --status-ready:      var(--green);
+
+  --radius-card: 14px;
+  --radius-btn:  8px;
+
+  --font-mono:   'Space Mono', monospace;
+  --font-ui:     'DM Sans', sans-serif;
+
+  --header-h:    72px;
+}
+
+/* ---- ROOT ---- */
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.kds-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  background: #0f0f0f;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Brand */
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.brand-name {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+}
+.brand-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Clock */
+.header-clock {
+  text-align: center;
+}
+.clock-digits {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.clock-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
+/* Controls */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 3px;
+}
+.dot-pending   { background: var(--gold); }
+.dot-preparing { background: var(--blue); }
+.dot-ready     { background: var(--green); }
+
+.btn-exit {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: var(--radius-btn);
+  border: 1px solid #555;
+  background: #FDFBD4;
+  color: var(--bg);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.btn-exit:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(232, 91, 91, 0.4);
+}
+.btn-exit:active {
+  transform: scale(0.97);
+  background: #c94444;
+}
+
+/* ============================================================
+   GRID
+   ============================================================ */
+.kds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+  padding: 24px 28px;
+  align-items: start;
+}
+
+/* ============================================================
+   TICKET CARD
+   ============================================================ */
+.ticket {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: slideIn 0.35s ease both;
+  position: relative;
+  overflow: hidden;
+}
+.ticket::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+}
+.ticket.pending::before   { background: var(--gold); }
+.ticket.preparing::before { background: var(--blue); }
+.ticket.ready::before     { background: var(--green); }
+
+/* -- Urgent pulse border -- */
+.ticket.urgent {
+  border-color: rgba(232, 91, 91, 0.5);
+  box-shadow: 0 0 0 1px rgba(232, 91, 91, 0.25), 0 4px 24px rgba(232, 91, 91, 0.08);
+  animation: slideIn 0.35s ease both, urgentPulse 2s ease-in-out infinite;
+}
+
+/* -- Card header -- */
+.ticket-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.table-name {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+.table-guests {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.ticket-meta {
+  text-align: right;
+}
+.queue-number {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+.ticket.pending   .queue-number { color: var(--gold); }
+.ticket.preparing .queue-number { color: var(--blue); }
+.ticket.ready     .queue-number { color: var(--green); }
+.ticket.urgent    .queue-number { color: var(--red); }
+
+.status-badge {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 3px;
+}
+.ticket.pending   .status-badge { color: var(--gold); }
+.ticket.preparing .status-badge { color: var(--blue); }
+.ticket.ready     .status-badge { color: var(--green); }
+.ticket.urgent    .status-badge { color: var(--red); }
+
+/* -- Order items -- */
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.order-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.item-qty {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 26px;
+  padding-top: 1px;
+  flex-shrink: 0;
+}
+
+.item-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+.item-name.done {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+.item-mods {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.item-mods.done {
+  color: var(--text-dim);
+}
+
+/* -- Divider -- */
+.ticket-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* -- Footer -- */
+.ticket-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.elapsed-time {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+.ticket.pending   .elapsed-time { color: var(--gold-dim); }
+.ticket.preparing .elapsed-time { color: var(--gold); }
+.ticket.urgent    .elapsed-time { color: var(--red); }
+.ticket.ready     .elapsed-time { color: var(--text-muted); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s, background 0.2s;
+  letter-spacing: 0.02em;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn-start {
+  background: var(--blue);
+  color: #fff;
+}
+.btn-start:hover { opacity: 0.85; }
+
+.btn-ready {
+  background: var(--green);
+  color: #fff;
+}
+.btn-ready:hover { opacity: 0.85; }
+
+.btn-complete {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.btn-complete:hover {
+  background: #333;
+  color: var(--text);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes urgentPulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(232,91,91,0.25), 0 4px 24px rgba(232,91,91,0.08); }
+  50%       { box-shadow: 0 0 0 2px rgba(232,91,91,0.5),  0 4px 32px rgba(232,91,91,0.2); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
